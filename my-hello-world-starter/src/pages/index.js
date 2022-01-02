@@ -16,6 +16,7 @@ export default function Home({ children }) {
             {children} For ProjectS
           </Link>
         </div>
+        <img src="/banner.png" alt="my banner" style={{ maxWidth: "100%" }} />
       </section>
     </Layout>
   )
