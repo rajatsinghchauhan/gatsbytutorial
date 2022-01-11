@@ -2,10 +2,11 @@ import React from "react"
 import { graphql, Link } from "gatsby"
 import Layout from "../../components/Layout"
 import { portfolio, projectt } from "../../styles/project.module.css"
+import { GatsbyImage } from "gatsby-plugin-image"
 
-export default function projectpage({ children, data }) {
+export default function projectpage({ data, children }) {
   console.log(data)
-  const projects = data.allMarkdownRemark.nodes
+  const projects = data.projects.nodes
 
   return (
     <Layout>
@@ -19,6 +20,18 @@ export default function projectpage({ children, data }) {
         {projects.map(project => (
           <Link to={"/projects/" + project.frontmatter.slug} key={project.id}>
             <div>
+              <GatsbyImage
+                image={
+                  project.frontmatter.thumb.childImageSharp.gatsbyImageData
+                }
+                alt="project thumbnail"
+              />
+              {/* <GatsbyImage
+                image={getImage(
+                  project.frontmatter.thumb.childImageSharp.gatsbyImageData
+                )}
+                alt="Banner"
+              /> */}
               <h3>{project.frontmatter.title}</h3>
               <p>{project.frontmatter.stack}</p>
             </div>
@@ -30,13 +43,24 @@ export default function projectpage({ children, data }) {
 }
 
 export const query = graphql`
-  query Projectpage {
-    allMarkdownRemark(sort: { order: ASC, fields: frontmatter___title }) {
+  query ProjectsPage {
+    projects: allMarkdownRemark(
+      sort: { order: DESC, fields: frontmatter___title }
+    ) {
       nodes {
         frontmatter {
           slug
           stack
           title
+          thumb {
+            childImageSharp {
+              gatsbyImageData(
+                layout: CONSTRAINED
+                placeholder: BLURRED
+                formats: [AUTO, WEBP, AVIF]
+              )
+            }
+          }
         }
         id
       }
